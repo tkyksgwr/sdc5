@@ -4,7 +4,7 @@ df = pd.read_csv(filepath_or_buffer="5th_form_answer.csv", encoding="utf-8", sep
 # print(df)
 
 # sort by date
-df2 = df.sort_values('対戦日は？(省略すると本日)')
+df2 = df.sort_values('対戦日は？(省略すると本日)', ascending=False)
 #print(df2)
 
 # fill NaN
