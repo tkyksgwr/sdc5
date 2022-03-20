@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 import argparse
+import logging
 import os
 import pandas as pd
+import sys
 
 args = []
 
@@ -10,15 +12,41 @@ def main():
     global args
     args = parse_args()
 
+    # logging
+    if args.Debug:
+        logging.basicConfig(level=logging.DEBUG)
+
     df = pd.read_csv(filepath_or_buffer=args.csv, encoding="utf-8", sep=",")
     # print(df)
     
     df2 = df.sort_values('対戦日は？(省略すると本日)', ascending=False) # sort by date
     df3 = df2.fillna(' ') # fill NaN
 
+    # dump team results
+    if args.team:
+        get_team_results(df3)
+
     # dump results
     get_results(df3)
-    
+
+def get_teams():
+
+    teams = []
+    teams.append('チーム徳川家康')
+    teams.append('東京シティBoys')
+    teams.append('TUBE')
+    teams.append('お上品関西軍団')
+    teams.append('チーム桃太郎')
+    teams.append('チームNAHANAHA')
+    logging.debug(teams)
+
+    return teams
+
+def get_team_results(df):
+
+    teams = get_teams()
+    sys.exit()
+
 def get_results(df):
     # table header
     title_str = "| {} | {} ({}) | {} | {} ({}) | {} |".format(
@@ -71,12 +99,22 @@ def get_results(df):
 def parse_args():
     parser = argparse.ArgumentParser(
         description = '''
-        Parse raw csv for SDC 5th
+        Parse raw csv for SDC 5th and output results
         '''
     )
     parser.add_argument(
         'csv',
         help='CSV input'
+    )
+    parser.add_argument(
+        '-t', '--team',
+        action='store_true',
+        help='Output team results'
+    )
+    parser.add_argument(
+        '-D', '--Debug',
+        action='store_true',
+        help='Debug mode'
     )
 
     args = parser.parse_args()
