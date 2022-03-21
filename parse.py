@@ -90,9 +90,9 @@ def get_team_results(df):
             logging.debug(df_win)
             num_win = len(df_win)
             logging.debug("num_win: {}".format(num_win))
-            num_loss = len(df[(df['あなたのチームは？'] == team) & (df['対戦相手は？'] == oteam) & (df['ダブルスの結果 [あなた]'] != 6)])
+            num_loss = len(df[(df['あなたのチームは？'] == team) & (df['対戦相手は？'] == oteam) & (df['ダブルスの結果 [対戦相手]'] == 6)])
             num_win_alt = len(df[(df['あなたのチームは？'] == oteam) & (df['対戦相手は？'] == team) & (df['ダブルスの結果 [対戦相手]'] == 6)])
-            num_loss_alt = len(df[(df['あなたのチームは？'] == oteam) & (df['対戦相手は？'] == team) & (df['ダブルスの結果 [対戦相手]'] != 6)])
+            num_loss_alt = len(df[(df['あなたのチームは？'] == oteam) & (df['対戦相手は？'] == team) & (df['ダブルスの結果 [あなた]'] == 6)])
             num_win = num_win + num_win_alt
             num_loss = num_loss + num_loss_alt
 
