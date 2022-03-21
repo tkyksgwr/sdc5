@@ -56,7 +56,7 @@ def get_team_results(df):
         teams[4],
         teams[5],
         'チーム勝敗',
-        '順位'
+        'チーム順位'
     )
     print(win_loss_str)
     win_loss_str = "| {} | {} | {} | {} | {} | {} | {} | {} | {} |".format(
@@ -76,15 +76,37 @@ def get_team_results(df):
         logging.debug(team)
 
         win_loss = []
+        team_win = 0
+        team_loss = 0
         for oteam in teams:
             if team == oteam:
                 win_loss.append('---')
                 continue
 
-            win_loss.append('+-+')
+            # Extract wins and losses
+            # df_win = df[(df['あなたのチームは？'] == team) & (df['対戦相手は？'] == oteam)]
+            # df_win = df_win[df_win['ダブルスの結果 [あなた]'] == 6]
+            df_win = df[(df['あなたのチームは？'] == team) & (df['対戦相手は？'] == oteam) & (df['ダブルスの結果 [あなた]'] == 6)]
+            logging.debug(df_win)
+            num_win = len(df_win)
+            logging.debug("num_win: {}".format(num_win))
+            num_loss = len(df[(df['あなたのチームは？'] == team) & (df['対戦相手は？'] == oteam) & (df['ダブルスの結果 [あなた]'] != 6)])
+            num_win_alt = len(df[(df['あなたのチームは？'] == oteam) & (df['対戦相手は？'] == team) & (df['ダブルスの結果 [対戦相手]'] == 6)])
+            num_loss_alt = len(df[(df['あなたのチームは？'] == oteam) & (df['対戦相手は？'] == team) & (df['ダブルスの結果 [対戦相手]'] != 6)])
+            num_win = num_win + num_win_alt
+            num_loss = num_loss + num_loss_alt
 
-        team_win_loss = '0-0'
-        team_rank = 0
+            win_loss_str = "{}-{}".format(num_win, num_loss)
+            win_loss.append(win_loss_str)
+
+            # calc team win loss
+            if num_win > num_loss:
+                team_win += 1
+            if num_win < num_loss:
+                team_loss += 1
+
+        team_win_loss = "{}-{}".format(team_win, team_loss)
+        team_rank = '--'
 
         #logging.debug(df[df['あなたのチームは？'] == team])
         win_loss_str = "| {} | {} | {} | {} | {} | {} | {} | {} | {} |".format(
