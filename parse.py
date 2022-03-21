@@ -17,7 +17,7 @@ def main():
         logging.basicConfig(level=logging.DEBUG)
 
     df = pd.read_csv(filepath_or_buffer=args.csv, encoding="utf-8", sep=",")
-    # print(df)
+    logging.debug(df)
     
     df2 = df.sort_values('対戦日は？(省略すると本日)', ascending=False) # sort by date
     df3 = df2.fillna(' ') # fill NaN
@@ -45,6 +45,61 @@ def get_teams():
 def get_team_results(df):
 
     teams = get_teams()
+
+    # Header
+    win_loss_str = "| {} | {} | {} | {} | {} | {} | {} | {} | {}|".format(
+        '---',
+        teams[0],
+        teams[1],
+        teams[2],
+        teams[3],
+        teams[4],
+        teams[5],
+        'チーム勝敗',
+        '順位'
+    )
+    print(win_loss_str)
+    win_loss_str = "| {} | {} | {} | {} | {} | {} | {} | {} | {} |".format(
+        '----:',
+        ':---:',
+        ':---:',
+        ':---:',
+        ':---:',
+        ':---:',
+        ':---:',
+        ':---:',
+        ':---:',
+    )
+    print(win_loss_str)
+
+    for team in teams:
+        logging.debug(team)
+
+        win_loss = []
+        for oteam in teams:
+            if team == oteam:
+                win_loss.append('---')
+                continue
+
+            win_loss.append('+-+')
+
+        team_win_loss = '0-0'
+        team_rank = 0
+
+        #logging.debug(df[df['あなたのチームは？'] == team])
+        win_loss_str = "| {} | {} | {} | {} | {} | {} | {} | {} | {} |".format(
+            team,
+            win_loss[0],
+            win_loss[1],
+            win_loss[2],
+            win_loss[3],
+            win_loss[4],
+            win_loss[5],
+            team_win_loss,
+            team_rank
+        )
+        print(win_loss_str)
+
     sys.exit()
 
 def get_results(df):
