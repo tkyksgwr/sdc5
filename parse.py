@@ -118,10 +118,12 @@ def get_team_results(df):
             win_loss.append(win_loss_str)
 
             # calc team win loss
-            if num_win > num_loss:
-                team_win += 1
-            if num_win < num_loss:
-                team_loss += 1
+            if (num_win + num_loss) > 2:
+                if num_win > num_loss:
+                    team_win += 1
+                if num_win < num_loss:
+                    team_loss += 1
+            
             # case: 2-2
             if (num_win == 2) and (num_loss == 2):
                 if num_games > num_ogames:
