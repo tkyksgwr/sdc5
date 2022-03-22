@@ -113,7 +113,7 @@ def get_team_results(df):
                 num_games = num_games + num_games_alt
                 num_ogames = num_ogames + num_ogames_alt
 
-                win_loss_str = "{} <br> ({}-{})".format(win_loss_str, int(num_games), int(num_ogames))
+                win_loss_str = "{} ({}-{})".format(win_loss_str, int(num_games), int(num_ogames))
                 
             win_loss.append(win_loss_str)
 
