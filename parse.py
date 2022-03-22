@@ -97,6 +97,24 @@ def get_team_results(df):
             num_loss = num_loss + num_loss_alt
 
             win_loss_str = "{}-{}".format(num_win, num_loss)
+
+            # count games if even
+            if num_win == num_loss:
+                df_games = df[(df['あなたのチームは？'] == team) & (df['対戦相手は？'] == oteam)].sum()
+                num_games = df_games['ダブルスの結果 [あなた]']
+                num_ogames = df_games['ダブルスの結果 [対戦相手]']
+                logging.debug('num_games: {}'.format(num_games))
+
+                df_games_alt = df[(df['あなたのチームは？'] == oteam) & (df['対戦相手は？'] == team)].sum()
+                num_games_alt = df_games_alt['ダブルスの結果 [対戦相手]']
+                num_ogames_alt = df_games_alt['ダブルスの結果 [あなた]']
+                logging.debug('num_games_alt: {}'.format(num_games_alt))
+
+                num_games = num_games + num_games_alt
+                num_ogames = num_ogames + num_ogames_alt
+
+                win_loss_str = "{} <br> ({}-{})".format(win_loss_str, int(num_games), int(num_ogames))
+                
             win_loss.append(win_loss_str)
 
             # calc team win loss
@@ -104,6 +122,12 @@ def get_team_results(df):
                 team_win += 1
             if num_win < num_loss:
                 team_loss += 1
+            # case: 2-2
+            if (num_win == 2) and (num_loss == 2):
+                if num_games > num_ogames:
+                    team_win +=1
+                if num_games < num_ogames:
+                    team_loss += 1
 
         team_win_loss = "{}-{}".format(team_win, team_loss)
         team_rank = '--'
