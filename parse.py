@@ -46,6 +46,10 @@ def get_team_results(df):
 
     teams = get_teams()
 
+    # page header
+    print('# チーム勝敗')
+    print('')
+
     # Header
     win_loss_str = "| {} | {} | {} | {} | {} | {} | {} | {} | {}|".format(
         '---',
@@ -55,7 +59,7 @@ def get_team_results(df):
         teams[3],
         teams[4],
         teams[5],
-        'チーム勝敗',
+        'チーム勝敗(得失ゲーム)',
         'チーム順位'
     )
     print(win_loss_str)
@@ -166,6 +170,10 @@ def get_team_results(df):
             team_rank
         )
         print(win_loss_str)
+
+    print('')
+    print('* 勝敗が同数の場合: 勝利数-敗北数 (得ゲーム数-失ゲーム数)')
+    print('')
 
     sys.exit()
 
