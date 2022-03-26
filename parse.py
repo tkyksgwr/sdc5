@@ -78,6 +78,8 @@ def get_team_results(df):
         win_loss = []
         team_win = 0
         team_loss = 0
+        team_win_games = 0
+        team_loss_games = 0
         for oteam in teams:
             if team == oteam:
                 win_loss.append('---')
@@ -98,21 +100,24 @@ def get_team_results(df):
 
             win_loss_str = "{}-{}".format(num_win, num_loss)
 
+            df_games = df[(df['あなたのチームは？'] == team) & (df['対戦相手は？'] == oteam)].sum()
+            num_games = df_games['ダブルスの結果 [あなた]']
+            num_ogames = df_games['ダブルスの結果 [対戦相手]']
+            logging.debug('num_games: {}'.format(num_games))
+
+            df_games_alt = df[(df['あなたのチームは？'] == oteam) & (df['対戦相手は？'] == team)].sum()
+            num_games_alt = df_games_alt['ダブルスの結果 [対戦相手]']
+            num_ogames_alt = df_games_alt['ダブルスの結果 [あなた]']
+            logging.debug('num_games_alt: {}'.format(num_games_alt))
+
+            num_games = num_games + num_games_alt
+            num_ogames = num_ogames + num_ogames_alt
+
+            team_win_games += num_games
+            team_loss_games += num_ogames
+
             # count games if even
             if num_win == num_loss:
-                df_games = df[(df['あなたのチームは？'] == team) & (df['対戦相手は？'] == oteam)].sum()
-                num_games = df_games['ダブルスの結果 [あなた]']
-                num_ogames = df_games['ダブルスの結果 [対戦相手]']
-                logging.debug('num_games: {}'.format(num_games))
-
-                df_games_alt = df[(df['あなたのチームは？'] == oteam) & (df['対戦相手は？'] == team)].sum()
-                num_games_alt = df_games_alt['ダブルスの結果 [対戦相手]']
-                num_ogames_alt = df_games_alt['ダブルスの結果 [あなた]']
-                logging.debug('num_games_alt: {}'.format(num_games_alt))
-
-                num_games = num_games + num_games_alt
-                num_ogames = num_ogames + num_ogames_alt
-
                 win_loss_str = "{} ({}-{})".format(win_loss_str, int(num_games), int(num_ogames))
                 
             win_loss.append(win_loss_str)
@@ -131,8 +136,22 @@ def get_team_results(df):
                 if num_games < num_ogames:
                     team_loss += 1
 
-        team_win_loss = "{}-{}".format(team_win, team_loss)
-        team_rank = '--'
+        #team_win_loss = "{}-{}".format(team_win, team_loss)
+        team_win_loss = "{}-{} ({}-{})".format(team_win, team_loss, int(team_win_games), int(team_loss_games))
+        if team == 'チーム桃太郎':
+            team_rank = '1'
+        elif team == '東京シティBoys':
+            team_rank = '2'
+        elif team == 'お上品関西軍団':
+            team_rank = '3'
+        elif team == 'TUBE':
+            team_rank = '4'
+        elif team == 'チームNAHANAHA':
+            team_rank = '5'
+        elif team == 'チーム徳川家康':
+            team_rank = '6'
+        else:
+            team_rank = '--'
 
         #logging.debug(df[df['あなたのチームは？'] == team])
         win_loss_str = "| {} | {} | {} | {} | {} | {} | {} | {} | {} |".format(
